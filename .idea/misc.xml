@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/alertService" />
+    <file type="web" url="file://$PROJECT_DIR$/authService" />
+    <file type="web" url="file://$PROJECT_DIR$/department-service" />
+    <file type="web" url="file://$PROJECT_DIR$/gatewayService" />
+    <file type="web" url="file://$PROJECT_DIR$/hystrix-dashboard" />
+    <file type="web" url="file://$PROJECT_DIR$/inventory-service" />
+    <file type="web" url="file://$PROJECT_DIR$/order-service" />
+    <file type="web" url="file://$PROJECT_DIR$/product-service" />
+    <file type="web" url="file://$PROJECT_DIR$/user-service" />
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+</project>
