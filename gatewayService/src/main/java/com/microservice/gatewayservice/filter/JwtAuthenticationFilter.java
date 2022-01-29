@@ -2,7 +2,6 @@ package com.microservice.gatewayservice.filter;
 
 import com.microservice.gatewayservice.exception.JwtTokenMalformedException;
 import com.microservice.gatewayservice.exception.JwtTokenMissingException;
-import com.microservice.gatewayservice.util.JwtUtil;
 import com.microservice.gatewayservice.util.JwtUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,8 @@ public class JwtAuthenticationFilter implements GatewayFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = (ServerHttpRequest) exchange.getRequest();
 
-        final List<String> apiEndpoints = Arrays.asList("/register", "/login","/currentUser");
+        final List<String> apiEndpoints = Arrays.asList("/register", "/login");
+        System.out.println("request.getURI() = " + request.getURI());
 
         Predicate<ServerHttpRequest> isApiSecured = r -> apiEndpoints.stream()
                 .noneMatch(uri -> r.getURI().getPath().contains(uri));
