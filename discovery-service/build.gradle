@@ -1,3 +1,13 @@
+// docker: new plugin
+buildscript {
+    dependencies {
+        classpath "gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.22.1"
+    }
+}
+
+
+
+
 plugins {
     id 'org.springframework.boot' version '2.6.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -5,7 +15,7 @@ plugins {
 }
 
 group = 'com.microservice.discovery'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = '1.8'
 
 repositories {
@@ -26,6 +36,20 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
+
+// docker: plugin apply
+apply plugin: 'com.palantir.docker'
+
+// docker: new task docker
+docker {
+    dependsOn build
+    name "${project.name}"
+    files bootJar.archiveFile
+    buildArgs(['JAR_FILE': "${bootJar.archiveFileName}"])
+    tag 'DockerHub', "<bulbuldevops>/discovery-service:${project.version}"
+}
+
+
 
 tasks.named('test') {
     useJUnitPlatform()

@@ -14,7 +14,6 @@ import com.microservice.authservice.security.jwt.JwtUtils;
 import com.microservice.authservice.security.services.UserDetailsImpl;
 import com.microservice.authservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +33,7 @@ import java.util.Set;
 
 @RestController
 public class AuthController {
+
     @Autowired
     JwtUtils jwtUtils;
 
@@ -72,7 +72,7 @@ public class AuthController {
             return ResponseEntity.ok(new JwtResponse(true, optionalUser.orElse(null), token, "Bearer", timeout));
 
         } catch (AuthenticationException e) {
-            return ResponseEntity.ok(new BaseResponse(false, "Email or password is incorrect"));
+            return ResponseEntity.ok(new BaseResponse(false, "Username or password is incorrect"));
         }
     }
 
@@ -138,10 +138,10 @@ public class AuthController {
     }
 
     @GetMapping("/auth/currentUser")
-    public ResponseEntity<String> getCurrentUser() {
+    public User getCurrentUser() {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> optionalUser = userRepository.findByUsername(userDetails.getUsername());
-        return ResponseEntity.ok(optionalUser.orElse(null).getUsername());
+        User user = userRepository.getByUsername(userDetails.getUsername());
+        return user;
     }
 
 }

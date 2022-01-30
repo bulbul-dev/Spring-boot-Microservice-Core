@@ -1,0 +1,4 @@
+FROM openjdk:8
+COPY gateway-service-0.0.1.jar gateway-service-0.0.1.jar
+CMD ["java","-jar","gateway-service-0.0.1.jar"]
+ENTRYPOINT ["java","-jar","/gateway-service-0.0.1.jar"]

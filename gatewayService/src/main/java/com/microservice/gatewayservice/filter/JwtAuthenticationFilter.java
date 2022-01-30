@@ -2,6 +2,8 @@ package com.microservice.gatewayservice.filter;
 
 import com.microservice.gatewayservice.exception.JwtTokenMalformedException;
 import com.microservice.gatewayservice.exception.JwtTokenMissingException;
+import com.microservice.gatewayservice.exception.RequestUrlNotPermitException;
+import com.microservice.gatewayservice.service.SystemResAuthCheckService;
 import com.microservice.gatewayservice.util.JwtUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ public class JwtAuthenticationFilter implements GatewayFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        ServerHttpRequest request = (ServerHttpRequest) exchange.getRequest();
+        ServerHttpRequest request = exchange.getRequest();
 
         final List<String> apiEndpoints = Arrays.asList("/register", "/login");
         System.out.println("request.getURI() = " + request.getURI());
@@ -43,11 +45,10 @@ public class JwtAuthenticationFilter implements GatewayFilter {
 
                 return response.setComplete();
             }
-
              this.token = request.getHeaders().getOrEmpty("Authorization").get(0);
 
             if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-                this.token = token.substring(7, token.length());
+                this.token = token.substring(7);
             }else{
                 try {
                     throw new JwtTokenMalformedException("JWT Token is malformed");
@@ -58,7 +59,13 @@ public class JwtAuthenticationFilter implements GatewayFilter {
 
             try {
                 jwtUtil.validateToken(token);
+                String username = jwtUtil.getUsernameFromToken(token);
                 System.out.println("JwtAuthenticationFilter: " + token);
+                System.out.println("username = " + username);
+                boolean authRequest = SystemResAuthCheckService.checkAuth(username,request);
+                if(!authRequest){
+                    throw new RequestUrlNotPermitException("Request URL not permit");
+                }
             } catch (JwtTokenMalformedException | JwtTokenMissingException e) {
                 // e.printStackTrace();
                 System.out.println("JwtAuthenticationFilter: " + e.getMessage());
@@ -66,6 +73,8 @@ public class JwtAuthenticationFilter implements GatewayFilter {
                 response.setStatusCode(HttpStatus.BAD_REQUEST);
 
                 return response.setComplete();
+            } catch (RequestUrlNotPermitException e) {
+                e.printStackTrace();
             }
 
             Claims claims = jwtUtil.getClaims(token);

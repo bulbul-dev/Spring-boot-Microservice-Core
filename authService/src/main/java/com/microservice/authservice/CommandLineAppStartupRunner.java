@@ -45,7 +45,6 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
         Role roleUser=this.roleRepository.getRoleByAuthority("ROLE_USER");
 
 
-
         Optional<User> superAdmin = this.userRepository.findByUsername("super-admin");
         if (!superAdmin.isPresent()) {
             Set<Role> rolesSuperAdminSet = new HashSet<>();
@@ -92,7 +91,6 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
         }
     }
-
 
     @Override
     public void run(String... args) throws Exception {
