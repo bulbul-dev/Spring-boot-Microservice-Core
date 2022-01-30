@@ -26,16 +26,19 @@ public class SystemResAuthCheckService {
     public static boolean checkAuth(String username,String token, ServerHttpRequest request) {
 
         log.info("username: {}", username);
-        // fetch user from db
         RestTemplate restTemplate = new RestTemplate();
-        // passing token  call rest template with passing  token header
-
+/*
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
         ResponseEntity<User> userResponse = restTemplate.exchange("http://localhost:9002/auth/currentUser", HttpMethod.GET, entity, User.class);
         Objects.requireNonNull(userResponse.getBody());
         System.out.println(userResponse.getBody().getEmail());
+
+*/
+
+
+
 
         return true;
     }
