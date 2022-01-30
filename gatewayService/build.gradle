@@ -59,6 +59,10 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies
     runtimeOnly group: 'org.springframework.cloud', name: 'spring-cloud-dependencies', version: 'Hoxton.SR8', ext: 'pom'
 
+    runtimeOnly 'mysql:mysql-connector-java'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
 
 
 }

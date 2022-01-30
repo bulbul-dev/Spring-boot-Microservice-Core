@@ -1,5 +1,6 @@
 package com.microservice.gatewayservice.filter;
 
+import com.microservice.gatewayservice.VO.User;
 import com.microservice.gatewayservice.exception.JwtTokenMalformedException;
 import com.microservice.gatewayservice.exception.JwtTokenMissingException;
 import com.microservice.gatewayservice.exception.RequestUrlNotPermitException;
@@ -14,6 +15,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -27,6 +29,8 @@ public class JwtAuthenticationFilter implements GatewayFilter {
     @Autowired
     private JwtUtils jwtUtil;
     String token;
+
+    private RestTemplate restTemplate;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -59,13 +63,16 @@ public class JwtAuthenticationFilter implements GatewayFilter {
 
             try {
                 jwtUtil.validateToken(token);
+
+                // For checking the user's authority
                 String username = jwtUtil.getUsernameFromToken(token);
-                System.out.println("JwtAuthenticationFilter: " + token);
-                System.out.println("username = " + username);
-                boolean authRequest = SystemResAuthCheckService.checkAuth(username,request);
-                if(!authRequest){
-                    throw new RequestUrlNotPermitException("Request URL not permit");
+                if(!request.getURI().getPath().contains("/auth/currentUser")){
+                    boolean authRequest = SystemResAuthCheckService.checkAuth(username,token,request);
+                    if(!authRequest){
+                        throw new RequestUrlNotPermitException("Request URL not permit");
+                    }
                 }
+
             } catch (JwtTokenMalformedException | JwtTokenMissingException e) {
                 // e.printStackTrace();
                 System.out.println("JwtAuthenticationFilter: " + e.getMessage());

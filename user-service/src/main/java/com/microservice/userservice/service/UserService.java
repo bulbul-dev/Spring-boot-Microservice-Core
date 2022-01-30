@@ -55,6 +55,7 @@ public class UserService {
                         Department.class);
         log.info("Department: {}", department);
 
+
         vo.setUser(user);
         vo.setDepartment(department);
         return vo;

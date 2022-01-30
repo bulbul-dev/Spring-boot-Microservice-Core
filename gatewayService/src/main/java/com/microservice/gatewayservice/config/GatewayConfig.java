@@ -26,8 +26,7 @@ public class GatewayConfig {
 
                 .route("auth-service", r -> r.path("/auth/**")
                         .filters( f->f.circuitBreaker(c -> c.setName("myCircuitBreaker")
-                                        .setFallbackUri("forward:/authServiceFallBack"))
-                                .filter(filter))
+                                        .setFallbackUri("forward:/authServiceFallBack")))
                         .uri("lb://auth-service"))
 
 
